@@ -1,12 +1,12 @@
 [project]
 name = "gmail_sweep_cli"
 version = "0.1.0"
-description = "Gmail attachment downloader with regex filtering support"
+description = "A CLI tool for aggregating emails from the “All Mail” folder in Gmail by sender address for a specified period, identifying unnecessary senders, and bulk deleting them (moving them to the trash)."
 authors = [{ name = "kakehashi" }]
 readme = "README.md"
 requires-python = ">=3.8"
 license = { file = "LICENSE" }
-keywords = ["gmail", "attachment", "download", "email", "automation"]
+keywords = ["gmail", "sweep", "trash", "email", "automation"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
