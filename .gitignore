@@ -215,4 +215,4 @@ downloads/
 /*.sql
 .specstory
 wget-log
-.vscode\launch.json
+.vscode/launch.json
