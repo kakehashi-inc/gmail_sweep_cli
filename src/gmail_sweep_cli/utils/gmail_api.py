@@ -70,3 +70,26 @@ def list_all_message_ids(service, query: str) -> List[str]:
             break
 
     return message_ids
+
+
+def get_message_metadata(service, msg_id: str, metadata_headers: Optional[List[str]] = None):
+    """Fetch a single message's metadata.
+
+    Args:
+        service: Gmail API service instance.
+        msg_id: Message ID.
+        metadata_headers: List of header names to fetch (e.g. ["From", "Subject", "Date"]).
+
+    Returns:
+        Message resource dict, or None on failure.
+    """
+    kwargs = {
+        "userId": "me",
+        "id": msg_id,
+        "format": "metadata",
+    }
+    if metadata_headers:
+        kwargs["metadataHeaders"] = metadata_headers
+
+    request = service.users().messages().get(**kwargs)
+    return execute_with_retry(request)

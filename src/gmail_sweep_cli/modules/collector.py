@@ -9,7 +9,7 @@ from typing import Dict, List
 from googleapiclient.discovery import build
 
 from gmail_sweep_cli.modules.models import AddressInfo, CollectedData
-from gmail_sweep_cli.utils.gmail_api import execute_with_retry, list_all_message_ids
+from gmail_sweep_cli.utils.gmail_api import get_message_metadata, list_all_message_ids
 
 
 def build_gmail_service(credentials):
@@ -68,17 +68,7 @@ def collect_emails(service, period_start: str, period_end: str) -> CollectedData
         print("  No messages found.")
 
     for msg_id in message_ids:
-        msg_request = (
-            service.users()
-            .messages()
-            .get(
-                userId="me",
-                id=msg_id,
-                format="metadata",
-                metadataHeaders=["From", "Subject", "Date"],
-            )
-        )
-        msg = execute_with_retry(msg_request)
+        msg = get_message_metadata(service, msg_id, ["From", "Subject", "Date"])
         if msg is None:
             continue
 

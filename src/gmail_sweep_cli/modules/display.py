@@ -85,7 +85,7 @@ def display_detail_screen(address: str, info, state: AppState) -> None:
 
 def display_marked_list(state: AppState) -> None:
     """Display the list of marked addresses."""
-    print()
+    clear_screen()
     if not state.marked_addresses:
         print("No addresses marked for deletion.")
     else:
@@ -101,11 +101,10 @@ def display_marked_list(state: AppState) -> None:
 def display_delete_confirmation(state: AppState) -> bool:
     """Display the delete confirmation screen. Returns True if user confirms."""
     if not state.marked_addresses:
-        print()
         print("No addresses marked for deletion.")
         return False
 
-    print()
+    clear_screen()
     print("=== Delete Confirmation ===")
     print("The following addresses are marked for deletion:")
     print()

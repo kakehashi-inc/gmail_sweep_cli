@@ -163,6 +163,50 @@ gmail_sweep_cli user@gmail.com --credentials /path/to/client_secret.json
 - **スター付き** および **重要マーク付き** メールは自動的にスキップされます。
 - 大文字の `Y` のみが削除を確定します。それ以外の入力はキャンセルとなります。
 
+## VSCode デバッグ設定
+
+プロジェクトルートに `.vscode/launch.json` を作成してください：
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "debugpy",
+      "request": "launch",
+      "name": "Launch CLI",
+      "module": "gmail_sweep_cli.main",
+      "args": [
+        "example@gmail.com"
+      ],
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "debugpy",
+      "request": "launch",
+      "name": "Launch CLI with Auth",
+      "module": "gmail_sweep_cli.main",
+      "args": [
+        "--auth",
+        "example@gmail.com"
+      ],
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
+```
+
+| 名前 | 説明 |
+|---|---|
+| **Launch CLI** | 対象メールアドレスを指定してCLIを実行（通常モード） |
+| **Launch CLI with Auth** | 対象メールアドレスのOAuth認証フローを実行 |
+
+> `example@gmail.com` を実際のGmailアドレスに置き換えてください。
+
 ## ライセンス
 
 MIT License。詳細は [LICENSE](LICENSE) を参照してください。

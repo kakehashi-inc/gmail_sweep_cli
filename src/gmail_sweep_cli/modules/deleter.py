@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from typing import List, Set
 
-from gmail_sweep_cli.utils.gmail_api import execute_with_retry, list_all_message_ids
+from gmail_sweep_cli.utils.gmail_api import execute_with_retry, get_message_metadata, list_all_message_ids
+
+
+def _clear_screen() -> None:
+    """Clear the console screen."""
+    os.system("cls" if os.name == "nt" else "clear")
 
 
 @dataclass
@@ -51,17 +57,7 @@ def delete_emails_for_addresses(service, addresses: Set[str]) -> List[DeleteResu
         for msg_idx, msg_id in enumerate(all_message_ids):
             print(f"\r[{idx}/{total_addresses}] {address}: {msg_idx + 1}/{result.total} processing...", end="", flush=True)
 
-            msg_request = (
-                service.users()
-                .messages()
-                .get(
-                    userId="me",
-                    id=msg_id,
-                    format="metadata",
-                    metadataHeaders=["From"],
-                )
-            )
-            msg = execute_with_retry(msg_request)
+            msg = get_message_metadata(service, msg_id, ["From"])
             if msg is None:
                 continue
 
@@ -94,7 +90,7 @@ def delete_emails_for_addresses(service, addresses: Set[str]) -> List[DeleteResu
 
 def print_delete_results(results: List[DeleteResult]) -> None:
     """Print the deletion result summary."""
-    print()
+    _clear_screen()
     print("=== Delete Result ===")
 
     total_moved = 0

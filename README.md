@@ -163,6 +163,50 @@ Shows full information for a single sender address (received dates, distinct sub
 - **Starred** and **Important** emails are automatically skipped.
 - Only uppercase `Y` confirms the deletion; any other input cancels.
 
+## VSCode Debug
+
+Create `.vscode/launch.json` in the project root:
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "debugpy",
+      "request": "launch",
+      "name": "Launch CLI",
+      "module": "gmail_sweep_cli.main",
+      "args": [
+        "example@gmail.com"
+      ],
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "debugpy",
+      "request": "launch",
+      "name": "Launch CLI with Auth",
+      "module": "gmail_sweep_cli.main",
+      "args": [
+        "--auth",
+        "example@gmail.com"
+      ],
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
+```
+
+| Name | Description |
+|---|---|
+| **Launch CLI** | Run the CLI with a target email address (default mode) |
+| **Launch CLI with Auth** | Run the OAuth authentication flow for the target email |
+
+> Replace `example@gmail.com` with the actual Gmail address you want to target.
+
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.
