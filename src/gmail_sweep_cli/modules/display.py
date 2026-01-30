@@ -30,19 +30,16 @@ def display_main_screen(state: AppState) -> None:
     print(f"Total: {total_addresses} addresses, {total_emails} emails")
     print()
 
-    # Table header
-    print(f" {'No.':>4} | {'Address':<34} | {'Count':>5} | {'Freq(days)':>10} | Subject")
-    print("-" * 5 + "+" + "-" * 36 + "+" + "-" * 7 + "+" + "-" * 12 + "+" + "-" * 21)
-
     # Page items
     items = state.get_page_items()
     start_idx = state.page_start_index()
 
     for i, (addr, info) in enumerate(items):
         no = start_idx + i
-        display_addr = _truncate(addr, 34)
-        subject = _truncate(info.subjects[0], 19) if info.subjects else ""
-        print(f" {no:>4} | {display_addr:<34} | {info.count:>5} | {info.frequency_days:>10.1f} | {subject}")
+        subject_line = _format_subject(info.subjects, 50)
+        print(f"{no}. {addr}")
+        print(f"   Count: {info.count} / Freq: {info.frequency_days} days")
+        print(f"   Subject: {subject_line}")
 
     print()
     total_items = len(data.addresses)
@@ -126,8 +123,63 @@ def display_delete_confirmation(state: AppState) -> bool:
     return answer == "Y"
 
 
-def _truncate(text: str, max_len: int) -> str:
-    """Truncate text with ellipsis if it exceeds max_len."""
-    if len(text) <= max_len:
+def _format_subject(subjects, max_width: int) -> str:
+    """Format subject line with truncation and count of additional subjects."""
+    if not subjects:
+        return ""
+    text = _truncate(subjects[0], max_width)
+    extra = len(subjects) - 1
+    if extra > 0:
+        text += f" (+{extra} more)"
+    return text
+
+
+def _display_width(text: str) -> int:
+    """Calculate display width treating fullwidth characters as width 2."""
+    width = 0
+    for ch in text:
+        if _is_wide(ch):
+            width += 2
+        else:
+            width += 1
+    return width
+
+
+def _is_wide(ch: str) -> bool:
+    """Return True if the character is a fullwidth (CJK, etc.) character."""
+    code = ord(ch)
+    # CJK Unified Ideographs, Hiragana, Katakana, Fullwidth Forms,
+    # CJK Symbols, Hangul, etc.
+    return (
+        (0x1100 <= code <= 0x115F)
+        or (0x2E80 <= code <= 0x9FFF)
+        or (0xAC00 <= code <= 0xD7AF)
+        or (0xF900 <= code <= 0xFAFF)
+        or (0xFE10 <= code <= 0xFE6F)
+        or (0xFF01 <= code <= 0xFF60)
+        or (0xFFE0 <= code <= 0xFFE6)
+        or (0x20000 <= code <= 0x2FA1F)
+    )
+
+
+def _truncate(text: str, max_width: int) -> str:
+    """Truncate text to max display width, appending '...' if truncated.
+
+    Fullwidth characters count as 2 columns.
+    """
+    if _display_width(text) <= max_width:
         return text
-    return text[: max_len - 3] + "..."
+
+    result = []
+    width = 0
+    suffix = "..."
+    suffix_width = 3  # "..." is 3 ascii chars
+
+    for ch in text:
+        ch_w = 2 if _is_wide(ch) else 1
+        if width + ch_w + suffix_width > max_width:
+            break
+        result.append(ch)
+        width += ch_w
+
+    return "".join(result) + suffix

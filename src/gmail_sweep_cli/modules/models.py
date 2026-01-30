@@ -106,7 +106,7 @@ class AppState:  # pylint: disable=too-many-instance-attributes
     data: Optional[CollectedData] = None
     marked_addresses: Set[str] = field(default_factory=set)
     current_page: int = 1
-    page_size: int = 20
+    page_size: int = 10
     shift_count: int = 0
 
     @property
