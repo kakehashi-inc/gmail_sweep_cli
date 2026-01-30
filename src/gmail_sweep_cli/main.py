@@ -91,6 +91,13 @@ def _handle_detail(state: AppState, number: int) -> None:
         print("Invalid input. Press Enter to go back or type 'mark' to mark for deletion.")
 
 
+def _delete_cache(cache_dir: str, email: str) -> None:
+    """Delete the cache JSON file for the given email."""
+    data_path = _get_data_path(cache_dir, email)
+    if data_path.exists():
+        data_path.unlink()
+
+
 def _run_interactive(state: AppState, service, cache_dir: str) -> None:
     """Run the interactive main loop."""
     while True:
@@ -102,11 +109,16 @@ def _run_interactive(state: AppState, service, cache_dir: str) -> None:
             print("Bye!")
             break
 
-        _dispatch_command(cmd, state, service, cache_dir)
+        should_exit = _dispatch_command(cmd, state, service, cache_dir)
+        if should_exit:
+            break
 
 
-def _dispatch_command(cmd: str, state: AppState, service, cache_dir: str) -> None:
-    """Dispatch a single command from the interactive loop."""
+def _dispatch_command(cmd: str, state: AppState, service, cache_dir: str) -> bool:
+    """Dispatch a single command from the interactive loop.
+
+    Returns True if the program should exit after this command.
+    """
     if cmd == "r":
         _collect_and_save(service, state, cache_dir)
         state.current_page = 1
@@ -145,8 +157,10 @@ def _dispatch_command(cmd: str, state: AppState, service, cache_dir: str) -> Non
         if confirmed:
             results = delete_emails_for_addresses(service, state.marked_addresses)
             print_delete_results(results)
-            state.marked_addresses.clear()
-        elif state.marked_addresses:
+            _delete_cache(cache_dir, state.email)
+            print("Cache cleared. Exiting.")
+            return True
+        if state.marked_addresses:
             print("Cancelled.")
     else:
         try:
@@ -154,6 +168,7 @@ def _dispatch_command(cmd: str, state: AppState, service, cache_dir: str) -> Non
             _handle_detail(state, number)
         except ValueError:
             print("Invalid input.")
+    return False
 
 
 @click.command()
