@@ -53,15 +53,15 @@ def _compute_period(days: int, start: str | None, end: str | None, shift: int = 
     return s.strftime("%Y-%m-%d"), e.strftime("%Y-%m-%d"), days
 
 
-def _get_data_path(token_dir: str, email: str) -> Path:
+def _get_data_path(cache_dir: str, email: str) -> Path:
     """Return the JSON data file path for the given email."""
-    return Path(token_dir) / f"{email}_data.json"
+    return Path(cache_dir) / f"{email}_data.json"
 
 
-def _collect_and_save(service, state: AppState, token_dir: str) -> None:
+def _collect_and_save(service, state: AppState, cache_dir: str) -> None:
     """Collect emails from Gmail API and save to JSON."""
     data = collect_emails(service, state.period_start, state.period_end)
-    data_path = _get_data_path(token_dir, state.email)
+    data_path = _get_data_path(cache_dir, state.email)
     data.save(data_path)
     state.data = data
 
@@ -91,7 +91,7 @@ def _handle_detail(state: AppState, number: int) -> None:
         print("Invalid input. Press Enter to go back or type 'mark' to mark for deletion.")
 
 
-def _run_interactive(state: AppState, service, token_dir: str) -> None:
+def _run_interactive(state: AppState, service, cache_dir: str) -> None:
     """Run the interactive main loop."""
     while True:
         display_main_screen(state)
@@ -102,27 +102,27 @@ def _run_interactive(state: AppState, service, token_dir: str) -> None:
             print("Bye!")
             break
 
-        _dispatch_command(cmd, state, service, token_dir)
+        _dispatch_command(cmd, state, service, cache_dir)
 
 
-def _dispatch_command(cmd: str, state: AppState, service, token_dir: str) -> None:
+def _dispatch_command(cmd: str, state: AppState, service, cache_dir: str) -> None:
     """Dispatch a single command from the interactive loop."""
     if cmd == "r":
-        _collect_and_save(service, state, token_dir)
+        _collect_and_save(service, state, cache_dir)
         state.current_page = 1
     elif cmd == "prev":
         state.shift_count -= 1
         period_start, period_end, _ = _compute_period(state.days, None, None, state.shift_count)
         state.period_start = period_start
         state.period_end = period_end
-        _collect_and_save(service, state, token_dir)
+        _collect_and_save(service, state, cache_dir)
         state.current_page = 1
     elif cmd == "next":
         state.shift_count += 1
         period_start, period_end, _ = _compute_period(state.days, None, None, state.shift_count)
         state.period_start = period_start
         state.period_end = period_end
-        _collect_and_save(service, state, token_dir)
+        _collect_and_save(service, state, cache_dir)
         state.current_page = 1
     elif cmd == "<":
         if state.current_page > 1:
@@ -164,7 +164,8 @@ def _dispatch_command(cmd: str, state: AppState, service, token_dir: str) -> Non
 @click.option("--end", "-e", default=None, help="Collection end date (YYYY-MM-DD).")
 @click.option("--credentials", "-c", default="./credentials/client_secret.json", help="Path to client_secret.json.")
 @click.option("--token-dir", "-t", default="./credentials/", help="Token storage directory.")
-def main(email, run_auth, days, start, end, credentials, token_dir):  # pylint: disable=too-many-positional-arguments
+@click.option("--cache-dir", default="./cache/", help="Cache directory for collected data.")
+def main(email, run_auth, days, start, end, credentials, token_dir, cache_dir):  # pylint: disable=too-many-positional-arguments
     """Gmail Sweep CLI - Aggregate and clean up Gmail by sender address.
 
     EMAIL is the target Gmail address (required).
@@ -188,7 +189,7 @@ def main(email, run_auth, days, start, end, credentials, token_dir):  # pylint: 
     )
 
     # Try loading existing data
-    data_path = _get_data_path(token_dir, email)
+    data_path = _get_data_path(cache_dir, email)
     existing = CollectedData.load(data_path)
     if existing:
         print(f"Loaded existing data from {data_path}")
@@ -196,9 +197,9 @@ def main(email, run_auth, days, start, end, credentials, token_dir):  # pylint: 
         state.period_start = existing.period_start
         state.period_end = existing.period_end
     else:
-        _collect_and_save(service, state, token_dir)
+        _collect_and_save(service, state, cache_dir)
 
-    _run_interactive(state, service, token_dir)
+    _run_interactive(state, service, cache_dir)
 
 
 if __name__ == "__main__":

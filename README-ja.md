@@ -128,6 +128,7 @@ gmail_sweep_cli user@gmail.com --credentials /path/to/client_secret.json
 | `--end` | `-e` | 収集終了日（YYYY-MM-DD） | `None` |
 | `--credentials` | `-c` | `client_secret.json` のパス | `./credentials/client_secret.json` |
 | `--token-dir` | `-t` | トークン保存ディレクトリ | `./credentials/` |
+| `--cache-dir` | - | 収集データのキャッシュディレクトリ | `./cache/` |
 
 ## 操作説明
 

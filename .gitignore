@@ -204,10 +204,10 @@ Desktop.ini
 .uv-cache/
 dist.backup/
 *.egg-info.backup/
-config.json
 client_secret.json
 credentials/
-downloads/
+cache/
+.vscode/launch.json
 
 # Etc
 *.cache.sqlite*
@@ -215,4 +215,3 @@ downloads/
 /*.sql
 .specstory
 wget-log
-.vscode/launch.json
