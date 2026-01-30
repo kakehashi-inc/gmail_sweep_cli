@@ -16,20 +16,7 @@ Gmailの「すべてのメール」から指定期間のメールをFromアド�
 - Python 3.10以上
 - Gmail APIが有効化されたGoogle Cloudプロジェクト
 
-## インストール
-
-### 開発環境（venv）
-
-```bash
-git clone https://github.com/kakehashi-inc/gmail_sweep_cli.git
-cd gmail_sweep_cli
-python -m venv venv
-source venv/bin/activate      # Linux/macOS
-# venv\Scripts\activate       # Windows
-pip install -e ".[dev]"
-```
-
-### uvxでの実行
+## クイックスタート
 
 ```bash
 uvx gmail_sweep_cli user@gmail.com
@@ -91,30 +78,26 @@ uvx gmail_sweep_cli user@gmail.com
 最初に認証フローを実行します（ブラウザが開きます）：
 
 ```bash
-# 開発環境
-python -m gmail_sweep_cli --auth user@gmail.com
-
-# インストール済み
-gmail_sweep_cli --auth user@gmail.com
+uvx gmail_sweep_cli --auth user@gmail.com
 ```
 
 ### 基本的な使い方
 
 ```bash
 # デフォルト: 過去30日のメールを収集
-gmail_sweep_cli user@gmail.com
+uvx gmail_sweep_cli user@gmail.com
 
 # 過去60日のメールを収集
-gmail_sweep_cli user@gmail.com --days 60
+uvx gmail_sweep_cli user@gmail.com --days 60
 
 # 期間を指定して収集
-gmail_sweep_cli user@gmail.com --start 2025-01-01 --end 2025-01-31
+uvx gmail_sweep_cli user@gmail.com --start 2025-01-01 --end 2025-01-31
 
 # トークン保存先を変更
-gmail_sweep_cli user@gmail.com --token-dir /path/to/tokens/
+uvx gmail_sweep_cli user@gmail.com --token-dir /path/to/tokens/
 
 # 認証情報ファイルのパスを変更
-gmail_sweep_cli user@gmail.com --credentials /path/to/client_secret.json
+uvx gmail_sweep_cli user@gmail.com --credentials /path/to/client_secret.json
 ```
 
 ### コマンドラインオプション
@@ -164,7 +147,30 @@ gmail_sweep_cli user@gmail.com --credentials /path/to/client_secret.json
 - **スター付き** および **重要マーク付き** メールは自動的にスキップされます。
 - 大文字の `Y` のみが削除を確定します。それ以外の入力はキャンセルとなります。
 
-## VSCode デバッグ設定
+## 開発
+
+### セットアップ
+
+```bash
+git clone https://github.com/kakehashi-inc/gmail_sweep_cli.git
+cd gmail_sweep_cli
+python -m venv venv
+source venv/bin/activate      # Linux/macOS
+# venv\Scripts\activate       # Windows
+pip install -e ".[dev]"
+```
+
+### ソースからの実行
+
+```bash
+# 認証
+python -m gmail_sweep_cli.main --auth user@gmail.com
+
+# 通常実行
+python -m gmail_sweep_cli.main user@gmail.com
+```
+
+### VSCode デバッグ設定
 
 プロジェクトルートに `.vscode/launch.json` を作成してください：
 

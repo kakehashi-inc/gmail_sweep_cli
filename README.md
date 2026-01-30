@@ -16,20 +16,7 @@ A CLI tool that aggregates emails from Gmail's "All Mail" by sender address for 
 - Python 3.10+
 - A Google Cloud project with Gmail API enabled
 
-## Installation
-
-### Development (venv)
-
-```bash
-git clone https://github.com/kakehashi-inc/gmail_sweep_cli.git
-cd gmail_sweep_cli
-python -m venv venv
-source venv/bin/activate      # Linux/macOS
-# venv\Scripts\activate       # Windows
-pip install -e ".[dev]"
-```
-
-### Run with uvx
+## Quick Start
 
 ```bash
 uvx gmail_sweep_cli user@gmail.com
@@ -91,30 +78,26 @@ uvx gmail_sweep_cli user@gmail.com
 Run the authentication flow first (opens a browser):
 
 ```bash
-# Development
-python -m gmail_sweep_cli --auth user@gmail.com
-
-# Installed
-gmail_sweep_cli --auth user@gmail.com
+uvx gmail_sweep_cli --auth user@gmail.com
 ```
 
 ### Basic Usage
 
 ```bash
 # Default: collect emails from the past 30 days
-gmail_sweep_cli user@gmail.com
+uvx gmail_sweep_cli user@gmail.com
 
 # Collect emails from the past 60 days
-gmail_sweep_cli user@gmail.com --days 60
+uvx gmail_sweep_cli user@gmail.com --days 60
 
 # Specify exact date range
-gmail_sweep_cli user@gmail.com --start 2025-01-01 --end 2025-01-31
+uvx gmail_sweep_cli user@gmail.com --start 2025-01-01 --end 2025-01-31
 
 # Custom token directory
-gmail_sweep_cli user@gmail.com --token-dir /path/to/tokens/
+uvx gmail_sweep_cli user@gmail.com --token-dir /path/to/tokens/
 
 # Custom credentials file
-gmail_sweep_cli user@gmail.com --credentials /path/to/client_secret.json
+uvx gmail_sweep_cli user@gmail.com --credentials /path/to/client_secret.json
 ```
 
 ### Command-Line Options
@@ -164,7 +147,30 @@ Shows full information for a single sender address (received dates, distinct sub
 - **Starred** and **Important** emails are automatically skipped.
 - Only uppercase `Y` confirms the deletion; any other input cancels.
 
-## VSCode Debug
+## Development
+
+### Setup
+
+```bash
+git clone https://github.com/kakehashi-inc/gmail_sweep_cli.git
+cd gmail_sweep_cli
+python -m venv venv
+source venv/bin/activate      # Linux/macOS
+# venv\Scripts\activate       # Windows
+pip install -e ".[dev]"
+```
+
+### Running from Source
+
+```bash
+# Authentication
+python -m gmail_sweep_cli --auth user@gmail.com
+
+# Normal execution
+python -m gmail_sweep_cli user@gmail.com
+```
+
+### VSCode Debug
 
 Create `.vscode/launch.json` in the project root:
 
