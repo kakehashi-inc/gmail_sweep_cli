@@ -32,7 +32,7 @@ pip install -e ".[dev]"
 ### Run with uvx
 
 ```bash
-uvx gmail-sweep-cli user@gmail.com
+uvx gmail_sweep_cli user@gmail.com
 ```
 
 ## Google Cloud Console Setup
@@ -42,7 +42,7 @@ uvx gmail-sweep-cli user@gmail.com
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Click the project selector at the top of the page
 3. Click **New Project**
-4. Enter a project name (e.g. `gmail-sweep-cli`) and click **Create**
+4. Enter a project name (e.g. `gmail_sweep_cli`) and click **Create**
 5. Make sure the new project is selected
 
 ### 2. Enable the Gmail API
@@ -95,26 +95,26 @@ Run the authentication flow first (opens a browser):
 python -m gmail_sweep_cli --auth user@gmail.com
 
 # Installed
-gmail-sweep-cli --auth user@gmail.com
+gmail_sweep_cli --auth user@gmail.com
 ```
 
 ### Basic Usage
 
 ```bash
 # Default: collect emails from the past 30 days
-gmail-sweep-cli user@gmail.com
+gmail_sweep_cli user@gmail.com
 
 # Collect emails from the past 60 days
-gmail-sweep-cli user@gmail.com --days 60
+gmail_sweep_cli user@gmail.com --days 60
 
 # Specify exact date range
-gmail-sweep-cli user@gmail.com --start 2025-01-01 --end 2025-01-31
+gmail_sweep_cli user@gmail.com --start 2025-01-01 --end 2025-01-31
 
 # Custom token directory
-gmail-sweep-cli user@gmail.com --token-dir /path/to/tokens/
+gmail_sweep_cli user@gmail.com --token-dir /path/to/tokens/
 
 # Custom credentials file
-gmail-sweep-cli user@gmail.com --credentials /path/to/client_secret.json
+gmail_sweep_cli user@gmail.com --credentials /path/to/client_secret.json
 ```
 
 ### Command-Line Options

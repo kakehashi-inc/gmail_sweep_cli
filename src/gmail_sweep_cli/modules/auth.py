@@ -45,7 +45,7 @@ def load_credentials(email: str, token_dir: str) -> Credentials:
 
     if not token_path.exists():
         print(f"Error: Token file not found: {token_path}")
-        print(f"Please run: gmail-sweep-cli --auth {email}")
+        print(f"Please run: gmail_sweep_cli --auth {email}")
         sys.exit(1)
 
     creds = Credentials.from_authorized_user_file(str(token_path), SCOPES)
@@ -57,7 +57,7 @@ def load_credentials(email: str, token_dir: str) -> Credentials:
 
     if not creds.valid:
         print("Error: Token is invalid. Please re-authenticate.")
-        print(f"Run: gmail-sweep-cli --auth {email}")
+        print(f"Run: gmail_sweep_cli --auth {email}")
         sys.exit(1)
 
     return creds
