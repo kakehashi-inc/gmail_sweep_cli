@@ -4,9 +4,22 @@
     {
       "type": "debugpy",
       "request": "launch",
-      "name": "Launch Downloader",
+      "name": "Launch CLI",
       "module": "gmail_sweep_cli.main",
       "args": [
+        "example@gmail.com",
+      ],
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "debugpy",
+      "request": "launch",
+      "name": "Launch CLI with Auth",
+      "module": "gmail_sweep_cli.main",
+      "args": [
+        "--auth",
         "example@gmail.com",
       ],
       "console": "integratedTerminal",
